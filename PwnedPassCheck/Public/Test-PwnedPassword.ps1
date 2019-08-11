@@ -1,5 +1,5 @@
 function Test-PwnedPassword {
-    [CmdletBinding(DefaultParameterSetName='String')]
+    [CmdletBinding()]
     param(
         [Parameter(Mandatory,Position=0,ValueFromPipeline)]
         [ValidateScript({Test-ValidPassObject $_ -ThrowOnFail})]
