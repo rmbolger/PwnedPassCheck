@@ -14,7 +14,9 @@ function Test-PwnedHash {
         $hashSuffix = $PasswordHash.Substring(5)
 
         # query the API
-        $results = Invoke-RestMethod "$($apiRoot)$($hashPrefix)" -UserAgent $script:USER_AGENT @script:UseBasic
+        try {
+            $results = (Invoke-WebRequest "$($apiRoot)$($hashPrefix)" @script:IWR_PARAMS).Content
+        } catch { throw }
 
         # check for the suffix in the results
         $SeenCount = 0
