@@ -77,7 +77,7 @@ Test-PwnedPassword 'password' -ApiRoot 'https://pwnpass.example.com/range/'
 In addition to the SHA1 hashed copy of the data, an NTLM hashed copy is available. This can be incredibly useful for auditing passwords in an Active Directory environment. If you are testing against an NTLM version of the API, use the `HashType` parameter to make sure the function calculates the correct hash value.
 
 ```powershell
-Test-PwnedPassword 'password' -ApiRoot 'https://pwnntlm.example.com/range/' -HashType 'NTLM'
+Test-PwnedPassword 'password' -HashType 'NTLM' -ApiRoot 'https://pwnntlm.example.com/range/'
 ```
 
 
