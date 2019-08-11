@@ -5,7 +5,7 @@ ModuleVersion = '1.0.0'
 GUID = 'f33d7d9c-2dc0-4bd4-a80a-557bc46bfe8c'
 Author = 'Ryan Bolger'
 Copyright = '(c) 2019 Ryan Bolger. All rights reserved.'
-Description = 'Helps check passwords/hashes against the haveibeenpwned.com Pwned Passwords API.'
+Description = 'Check passwords and hashes against the haveibeenpwned.com Pwned Passwords API. Also supports third party equivalent APIs.'
 PowerShellVersion = '3.0'
 
 FunctionsToExport = @(
@@ -34,7 +34,7 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
-## 1.0.0 (2019-08-10)
+## 1.0.0 (2019-08-11)
 
 * Initial Release
 * Added functions

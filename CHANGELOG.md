@@ -1,4 +1,4 @@
-## 1.0.0 (2019-08-10)
+## 1.0.0 (2019-08-11)
 
 * Initial Release
 * Added functions
