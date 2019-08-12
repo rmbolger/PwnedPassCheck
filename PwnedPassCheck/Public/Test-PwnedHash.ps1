@@ -1,15 +1,31 @@
 function Test-PwnedHash {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName='String')]
     [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPlainTextForPassword','')]
     param(
-        [Parameter(Mandatory,Position=0,ValueFromPipeline)]
+        [Parameter(ParameterSetName='String',Mandatory,Position=0,ValueFromPipeline)]
         [ValidateScript({Test-ValidHash $_ -ThrowOnFail})]
         [string]$PasswordHash,
+        [Parameter(ParameterSetName='Bytes',Mandatory,Position=0,ValueFromPipelineByPropertyName)]
+        [Alias('NTHash')]
+        [byte[]]$HashBytes,
         [string]$ApiRoot = "https://api.pwnedpasswords.com/range/"
     )
 
     Process
     {
+        if ('Bytes' -eq $PSCmdlet.ParameterSetName) {
+            # validate the length of the byte array here since we can't do it in ValidateScript
+            # due to this oddity:
+            # https://github.com/PowerShell/PowerShell/issues/6185
+            if ($HashBytes.Length -ne 16 -and $HashBytes.Length -ne 20) {
+                throw "HashBytes has an invalid length for SHA1 and NTLM."
+            }
+
+            # convert it to a hex string for submission
+            $PasswordHash = [BitConverter]::ToString($HashBytes).Replace('-','')
+            Write-Verbose "Converted hash bytes to $PasswordHash"
+        }
+
         $hashPrefix = $PasswordHash.Substring(0,5)
         $hashSuffix = $PasswordHash.Substring(5)
 
@@ -45,6 +61,9 @@ function Test-PwnedHash {
     .PARAMETER PasswordHash
         The hash to check. UTF8 encoded SHA1 hashes are expected with the official (default) pwnedpasswords.com API. Some third parties host NTLM (UTF16-LE encoded) versions of the API as well.
 
+    .PARAMETER HashBytes
+        A byte array hash value. An error will be thrown if the byte array has a length other than 16 (NTLM) or 20 (SHA1).
+
     .PARAMETER ApiRoot
         If specified, overrides the default pwnedpasswords.com API endpoint. Alternative URLs should include everything preceding the 5 character hash prefix (e.g. 'https://example.com/range/').
 
@@ -59,6 +78,12 @@ function Test-PwnedHash {
         PS C:\>$hash | Test-PwnedHash -ApiRoot 'http://internal.example.com/range/'
 
         Test a password hash against an internal NTLM Pwned Passwords API endpoint.
+
+    .EXAMPLE
+        $hashBytes = Get-SHA1Hash 'password' -AsBytes
+        PS C:\>Test-PwnedHash $hashBytes
+
+        Test a byte array hash against the official pwnedpasswords.com API
 
     .LINK
         Get-SHA1Hash
