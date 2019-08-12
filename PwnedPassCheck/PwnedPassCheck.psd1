@@ -12,6 +12,7 @@ FunctionsToExport = @(
     'Get-NTLMHash'
     'Get-SHA1Hash'
     'Test-PwnedHash'
+    'Test-PwnedHashBytes'
     'Test-PwnedPassword'
 )
 
