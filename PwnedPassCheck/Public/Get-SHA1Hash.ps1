@@ -1,9 +1,11 @@
 function Get-SHA1Hash {
     [CmdletBinding()]
+    [OutputType([string],[byte[]])]
     param (
         [Parameter(Mandatory,Position=0,ValueFromPipeline)]
         [ValidateScript({Test-ValidPassObject $_ -ThrowOnFail})]
-        [object]$InputObject
+        [object]$InputObject,
+        [switch]$AsBytes
     )
 
     Begin {
@@ -28,8 +30,13 @@ function Get-SHA1Hash {
         # hash it
         $hash = $sha1.ComputeHash($BytesToHash)
 
-        # stringify the hash and return it
-        [BitConverter]::ToString($hash).Replace('-','')
+        if ($AsBytes) {
+            return $hash
+        } else {
+            # stringify the hash and return it
+            [BitConverter]::ToString($hash).Replace('-','')
+        }
+
     }
 
     End {
@@ -48,10 +55,13 @@ function Get-SHA1Hash {
     .PARAMETER InputObject
         A String, SecureString, or PSCredential object to hash. The username on a PSCredential object is ignored.
 
+    .PARAMETER AsBytes
+        If specified, the hash will be returned as a byte array instead of a string.
+
     .EXAMPLE
         Get-SHA1Hash 'password'
 
-        Get the SHA1 has for 'password'.
+        Get the SHA1 hash for 'password'.
 
     .EXAMPLE
         $secString = Read-Host -Prompt 'Secret' -AsSecureSTring
@@ -64,6 +74,11 @@ function Get-SHA1Hash {
         PS C:\>Get-SHA1Hash $cred
 
         Get the SHA1 hash for the specified credential.
+
+    .EXAMPLE
+        $hashBytes = Get-SHA1Hash 'password' -AsBytes
+
+        Get the SHA1 hash as a byte array for 'password'.
 
     .LINK
         Get-NTLMHash

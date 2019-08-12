@@ -1,9 +1,11 @@
 function Get-NTLMHash {
     [CmdletBinding()]
+    [OutputType([string],[byte[]])]
     param (
         [Parameter(Mandatory,Position=0,ValueFromPipeline)]
         [ValidateScript({Test-ValidPassObject $_ -ThrowOnFail})]
-        [object]$InputObject
+        [object]$InputObject,
+        [switch]$AsBytes
     )
 
     # Adapted From:
@@ -153,14 +155,18 @@ function Get-NTLMHash {
             $D = ($D + $DD) -band [UInt32]::MaxValue
 
         }
+
         # Output
         $A = ('{0:x8}' -f $A) -ireplace '^(\w{2})(\w{2})(\w{2})(\w{2})$', '$4$3$2$1'
         $B = ('{0:x8}' -f $B) -ireplace '^(\w{2})(\w{2})(\w{2})(\w{2})$', '$4$3$2$1'
         $C = ('{0:x8}' -f $C) -ireplace '^(\w{2})(\w{2})(\w{2})(\w{2})$', '$4$3$2$1'
         $D = ('{0:x8}' -f $D) -ireplace '^(\w{2})(\w{2})(\w{2})(\w{2})$', '$4$3$2$1'
 
-
-        return "$A$B$C$D".ToUpper()
+        if ($AsBytes) {
+            return (Convert-HexToByteArray "$A$B$C$D")
+        } else {
+            return "$A$B$C$D".ToUpper()
+        }
 
     }
 
@@ -176,10 +182,13 @@ function Get-NTLMHash {
     .PARAMETER InputObject
         A String, SecureString, or PSCredential object to hash. The username on a PSCredential object is ignored.
 
+    .PARAMETER AsBytes
+        If specified, the hash will be returned as a byte array instead of a string.
+
     .EXAMPLE
         Get-NTLMHash 'password'
 
-        Get the NTLM has for 'password'.
+        Get the NTLM hash for 'password'.
 
     .EXAMPLE
         $secString = Read-Host -Prompt 'Secret' -AsSecureSTring
@@ -192,6 +201,11 @@ function Get-NTLMHash {
         PS C:\>Get-NTLMHash $cred
 
         Get the NTLM hash for the specified credential.
+
+    .EXAMPLE
+        $hashBytes = Get-NTLMHash 'password' -AsBytes
+
+        Get the NTLM hash as a byte array for 'password'.
 
     .LINK
         Get-SHA1Hash
