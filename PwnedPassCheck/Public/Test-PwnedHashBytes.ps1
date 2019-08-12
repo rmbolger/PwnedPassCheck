@@ -27,7 +27,7 @@ function Test-PwnedHashBytes {
 
     <#
     .SYNOPSIS
-        Checks a SHA1 or NTLM hash's byte array against a haveibeenpwned.com compatible Pwned Passwords API endpoint.
+        Checks a SHA1 or NTLM hash byte array against a haveibeenpwned.com compatible Pwned Passwords API endpoint.
 
     .DESCRIPTION
         The Pwned Passwords API is a way to check a password hash against a list of more than half a billion passwords which have been previously exposed in data breaches. The API implements a k-Anonymity model that allows a password to be searched for by partial hash. This means your full password hash never leaves your machine and ensures your privacy.
