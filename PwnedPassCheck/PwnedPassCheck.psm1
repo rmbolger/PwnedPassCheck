@@ -15,7 +15,7 @@ foreach ($import in @($Public + $Private))
 
 # Define common parameters for Invoke-WebRequest
 $script:IWR_PARAMS = @{
-    UserAgent = "PwnedPassCheck/1.0.0 PowerShell/$($PSVersionTable.PSVersion)"
+    UserAgent = "PwnedPassCheck/1.1.0 PowerShell/$($PSVersionTable.PSVersion)"
 }
 
 # Invoke-WebRequest in Windows PowerShell uses IE's DOM parser by default which
