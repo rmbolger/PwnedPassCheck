@@ -8,6 +8,7 @@ function Test-PwnedHash {
         [Parameter(ValueFromPipelineByPropertyName)]
         [Alias('SamAccountName')]
         [string]$Label,
+        [ValidateNotNullOrEmpty()]
         [string]$ApiRoot = "https://api.pwnedpasswords.com/range/"
     )
 
@@ -17,10 +18,15 @@ function Test-PwnedHash {
         $hashPrefix = $PasswordHash.Substring(0,5)
         $hashSuffix = $PasswordHash.Substring(5)
 
-        # query the API
-        try {
-            $results = (Invoke-WebRequest "$($apiRoot)$($hashPrefix)" @script:IWR_PARAMS).Content
-        } catch { throw }
+        if ($ApiRoot -like 'http*') {
+            # query the appropriate web URL
+            try {
+                $results = (Invoke-WebRequest "$($ApiRoot)$($hashPrefix)" @script:IWR_PARAMS).Content
+            } catch { throw }
+        } else {
+            # must be filesystem path, so try to get contents
+            $results = Get-Content "$($ApiRoot)$($hashPrefix)" -Raw -EA Stop
+        }
 
         # check for the suffix in the results
         $SeenCount = 0
@@ -60,7 +66,7 @@ function Test-PwnedHash {
         This adds an optional Label field to the output to more easily identifiy this hash.
 
     .PARAMETER ApiRoot
-        If specified, overrides the default pwnedpasswords.com API endpoint. Alternative URLs should include everything preceding the 5 character hash prefix (e.g. 'https://example.com/range/').
+        If specified, overrides the default pwnedpasswords.com API URL. URLs or filesystem paths can both be used as an alternative. The URL\Path should include everything preceding the 5 character hash prefix (e.g. 'https://example.com/range/' or 'C:\temp\').
 
     .EXAMPLE
         $hash = '5BAA61E4C9B93F3F0682250B6CF8331B7EE68FD8' # UTF8 SHA1 hash of 'password'

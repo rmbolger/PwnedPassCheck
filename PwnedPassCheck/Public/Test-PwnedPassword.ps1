@@ -4,6 +4,7 @@ function Test-PwnedPassword {
         [Parameter(Mandatory,Position=0,ValueFromPipeline)]
         [ValidateScript({Test-ValidPassObject $_ -ThrowOnFail})]
         [object]$InputObject,
+        [ValidateNotNullOrEmpty()]
         [string]$ApiRoot = "https://api.pwnedpasswords.com/range/",
         [ValidateSet('SHA1','NTLM')]
         [string]$HashType = 'SHA1'
@@ -38,7 +39,7 @@ function Test-PwnedPassword {
         A String, SecureString, or PSCredential object to check. The username on a PSCredential object is ignored.
 
     .PARAMETER ApiRoot
-        If specified, overrides the default pwnedpasswords.com API endpoint. Alternative URLs should include everything preceding the 5 character hash prefix (e.g. 'https://example.com/range/').
+        If specified, overrides the default pwnedpasswords.com API URL. URLs or filesystem paths can both be used as an alternative. The URL\Path should include everything preceding the 5 character hash prefix (e.g. 'https://example.com/range/' or 'C:\temp\').
 
     .PARAMETER HashType
         SHA1 or NTLM. The default is SHA1 and is used by the official pwnedpasswords.com API endpoint.

@@ -6,6 +6,7 @@ function Test-PwnedHashBytes {
         [Parameter(ValueFromPipelineByPropertyName)]
         [Alias('SamAccountName')]
         [string]$Label,
+        [ValidateNotNullOrEmpty()]
         [string]$ApiRoot = "https://api.pwnedpasswords.com/range/"
     )
 
@@ -43,7 +44,7 @@ function Test-PwnedHashBytes {
         This adds an optional Label field to the output to more easily identifiy this hash.
 
     .PARAMETER ApiRoot
-        If specified, overrides the default pwnedpasswords.com API endpoint. Alternative URLs should include everything preceding the 5 character hash prefix (e.g. 'https://example.com/range/').
+        If specified, overrides the default pwnedpasswords.com API URL. URLs or filesystem paths can both be used as an alternative. The URL\Path should include everything preceding the 5 character hash prefix (e.g. 'https://example.com/range/' or 'C:\temp\').
 
     .EXAMPLE
         $hashBytes = Get-SHA1Hash 'password' -AsBytes
