@@ -27,7 +27,7 @@ if ([String]::IsNullOrWhiteSpace($PSScriptRoot)) {
 
     # download and extract
     $webclient = New-Object System.Net.WebClient
-    $url = 'https://github.com/rmbolger/PwnedPassCheck/archive/master.zip'
+    $url = 'https://github.com/rmbolger/PwnedPassCheck/archive/main.zip'
     Write-Host "Downloading latest version of PwnedPassCheck from $url" -ForegroundColor Cyan
     $file = Join-Path ([system.io.path]::GetTempPath()) 'PwnedPassCheck.zip'
     $webclient.DownloadFile($url,$file)
@@ -48,8 +48,8 @@ if ([String]::IsNullOrWhiteSpace($PSScriptRoot)) {
     Write-Host "Removing any old copy" -ForegroundColor Cyan
     Remove-Item "$installpath\PwnedPassCheck" -Recurse -Force -EA SilentlyContinue
     Write-Host "Renaming folder" -ForegroundColor Cyan
-    Copy-Item "$installpath\PwnedPassCheck-master\PwnedPassCheck" $installpath -Recurse -Force
-    Remove-Item "$installpath\PwnedPassCheck-master" -recurse -confirm:$false
+    Copy-Item "$installpath\PwnedPassCheck-main\PwnedPassCheck" $installpath -Recurse -Force
+    Remove-Item "$installpath\PwnedPassCheck-main" -recurse -confirm:$false
     Import-Module -Name PwnedPassCheck -Force
 } else {
     # running locally

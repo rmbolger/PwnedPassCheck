@@ -26,14 +26,14 @@ Install-Module -Name PwnedPassCheck -Scope CurrentUser
 
 ## Development
 
-To install the latest *development* version from the git master branch, use the following command.
+To install the latest *development* version from the git main branch, use the following command.
 
 ```powershell
 # (optional) set less restrictive execution policy
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 
 # install latest dev version
-iex (irm https://raw.githubusercontent.com/rmbolger/PwnedPassCheck/master/instdev.ps1)
+iex (irm https://raw.githubusercontent.com/rmbolger/PwnedPassCheck/main/instdev.ps1)
 ```
 
 

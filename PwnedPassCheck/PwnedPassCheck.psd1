@@ -28,7 +28,7 @@ PrivateData = @{
         Tags = 'Security','HIBP','HaveIBeenPwned','InfoSec','PSEdition_Desktop','PSEdition_Core','Linux','Mac'
 
         # A URL to the license for this module.
-        LicenseUri = 'https://github.com/rmbolger/PwnedPassCheck/blob/master/LICENSE'
+        LicenseUri = 'https://github.com/rmbolger/PwnedPassCheck/blob/main/LICENSE'
 
         # A URL to the main website for this project.
         ProjectUri = 'https://github.com/rmbolger/PwnedPassCheck'
