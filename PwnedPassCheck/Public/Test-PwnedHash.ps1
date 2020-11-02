@@ -9,8 +9,18 @@ function Test-PwnedHash {
         [Alias('SamAccountName')]
         [string]$Label,
         [ValidateNotNullOrEmpty()]
-        [string]$ApiRoot = "https://api.pwnedpasswords.com/range/"
+        [string]$ApiRoot = "https://api.pwnedpasswords.com/range/",
+        [switch]$RequestPadding
     )
+
+    Begin {
+        $headers = @{}
+        if ($RequestPadding) {
+            $headers.Headers = @{
+                'Add-Padding' = 'true'
+            }
+        }
+    }
 
     Process
     {
@@ -21,7 +31,7 @@ function Test-PwnedHash {
         if ($ApiRoot -like 'http*') {
             # query the appropriate web URL
             try {
-                $results = (Invoke-WebRequest "$($ApiRoot)$($hashPrefix)" @script:IWR_PARAMS).Content
+                $results = (Invoke-WebRequest "$($ApiRoot)$($hashPrefix)" @script:IWR_PARAMS @headers).Content
             } catch { throw }
         } else {
             # must be filesystem path, so try to get contents
@@ -67,6 +77,9 @@ function Test-PwnedHash {
 
     .PARAMETER ApiRoot
         If specified, overrides the default pwnedpasswords.com API URL. URLs or filesystem paths can both be used as an alternative. The URL\Path should include everything preceding the 5 character hash prefix (e.g. 'https://example.com/range/' or 'C:\temp\').
+
+    .PARAMETER RequestPadding
+        If specified, HTTP based queries will add the 'Add-Padding: true' header to the request which signals to the server to return a randomly padded response. See https://www.troyhunt.com/enhancing-pwned-passwords-privacy-with-padding for details.
 
     .EXAMPLE
         $hash = '5BAA61E4C9B93F3F0682250B6CF8331B7EE68FD8' # UTF8 SHA1 hash of 'password'

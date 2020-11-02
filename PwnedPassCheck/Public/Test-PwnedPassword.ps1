@@ -7,12 +7,16 @@ function Test-PwnedPassword {
         [ValidateNotNullOrEmpty()]
         [string]$ApiRoot = "https://api.pwnedpasswords.com/range/",
         [ValidateSet('SHA1','NTLM')]
-        [string]$HashType = 'SHA1'
+        [string]$HashType = 'SHA1',
+        [switch]$RequestPadding
     )
 
     Begin
     {
         $HashCmd = "Get-$($HashType)Hash"
+
+        $padding = @{}
+        if ($RequestPadding) { $padding.RequestPadding = $true }
     }
 
     Process
@@ -21,7 +25,7 @@ function Test-PwnedPassword {
         $PasswordHash = &$HashCmd $InputObject
 
         # Check the hash
-        Test-PwnedHash $PasswordHash -ApiRoot $ApiRoot
+        Test-PwnedHash $PasswordHash -ApiRoot $ApiRoot @padding
     }
 
     <#
@@ -43,6 +47,9 @@ function Test-PwnedPassword {
 
     .PARAMETER HashType
         SHA1 or NTLM. The default is SHA1 and is used by the official pwnedpasswords.com API endpoint.
+
+    .PARAMETER RequestPadding
+        If specified, HTTP based queries will add the 'Add-Padding: true' header to the request which signals to the server to return a randomly padded response. See https://www.troyhunt.com/enhancing-pwned-passwords-privacy-with-padding for details.
 
     .EXAMPLE
         $secPass = Read-Host -Prompt 'Password' -AsSecureString

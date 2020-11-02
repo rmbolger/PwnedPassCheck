@@ -7,8 +7,14 @@ function Test-PwnedHashBytes {
         [Alias('SamAccountName')]
         [string]$Label,
         [ValidateNotNullOrEmpty()]
-        [string]$ApiRoot = "https://api.pwnedpasswords.com/range/"
+        [string]$ApiRoot = "https://api.pwnedpasswords.com/range/",
+        [switch]$RequestPadding
     )
+
+    Begin {
+        $padding = @{}
+        if ($RequestPadding) { $padding.RequestPadding = $true }
+    }
 
     Process
     {
@@ -23,7 +29,7 @@ function Test-PwnedHashBytes {
         $PasswordHash = [BitConverter]::ToString($HashBytes).Replace('-','')
         Write-Verbose "Converted hash bytes to $PasswordHash"
 
-        Test-PwnedHash $PasswordHash -ApiRoot $ApiRoot -Label $Label
+        Test-PwnedHash $PasswordHash -ApiRoot $ApiRoot -Label $Label @padding
     }
 
     <#
@@ -45,6 +51,9 @@ function Test-PwnedHashBytes {
 
     .PARAMETER ApiRoot
         If specified, overrides the default pwnedpasswords.com API URL. URLs or filesystem paths can both be used as an alternative. The URL\Path should include everything preceding the 5 character hash prefix (e.g. 'https://example.com/range/' or 'C:\temp\').
+
+    .PARAMETER RequestPadding
+        If specified, HTTP based queries will add the 'Add-Padding: true' header to the request which signals to the server to return a randomly padded response. See https://www.troyhunt.com/enhancing-pwned-passwords-privacy-with-padding for details.
 
     .EXAMPLE
         $hashBytes = Get-SHA1Hash 'password' -AsBytes
