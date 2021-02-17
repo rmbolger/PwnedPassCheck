@@ -14,6 +14,9 @@ FunctionsToExport = @(
     'Get-PwnedHashBytes'
     'Get-PwnedPassword'
     'Get-SHA1Hash'
+    'Test-PwnedHash'
+    'Test-PwnedHashBytes'
+    'Test-PwnedPassword'
 )
 
 CmdletsToExport = @()
