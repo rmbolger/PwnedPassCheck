@@ -18,7 +18,7 @@ The [latest release version](https://www.powershellgallery.com/packages/PwnedPas
 
 ```powershell
 # install for all users (requires elevated privs)
-Install-Module -Name PwnedPassCheck
+Install-Module -Name PwnedPassCheck -Scope AllUsers
 
 # install for current user
 Install-Module -Name PwnedPassCheck -Scope CurrentUser
@@ -55,6 +55,14 @@ $credential = Get-Credential
 Get-PwnedPassword $credential
 ```
 
+The output should look like this where `Hash` is the hash of the password that was checked and `SeenCount` is the number of times that hash was seen in data breaches. If the number is zero, that means the hash has never been see in a data breach.
+
+```
+Hash                                     SeenCount
+----                                     ---------
+5BAA61E4C9B93F3F0682250B6CF8331B7EE68FD8   3861493
+```
+
 If you want to bulk test passwords, just pass them all in via the pipeline like this.
 
 ```powershell
@@ -67,6 +75,8 @@ If you have existing hashes to check, you can use `Get-PwnedHash`. However, the 
 $hash = '70CCD9007338D6D81DD3B6271621B9CF9A97EA00' # SHA1 hash of "Password1"
 Get-PwnedHash $hash
 ```
+
+`Test-PwnedPassword`, `Test-PwnedHash`, and `Test-PwnedHashBytes` also exist which are similar to their `Get-Pwned*` equivalents except they return a True/False result instead of the more details Hash/SeenCount data. True indicates the password/hash was seen in at least one breach. Otherwise, False.
 
 Because the Pwned Password data is freely downloadable, it's possible to setup your own local copy of the API or use one hosted by a third party. Use the `ApiRoot` parameter to override the default API URL you test against.
 
