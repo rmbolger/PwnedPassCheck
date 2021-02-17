@@ -10,10 +10,10 @@ PowerShellVersion = '3.0'
 
 FunctionsToExport = @(
     'Get-NTLMHash'
+    'Get-PwnedHash'
+    'Get-PwnedHashBytes'
+    'Get-PwnedPassword'
     'Get-SHA1Hash'
-    'Test-PwnedHash'
-    'Test-PwnedHashBytes'
-    'Test-PwnedPassword'
 )
 
 CmdletsToExport = @()

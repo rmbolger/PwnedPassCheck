@@ -1,4 +1,4 @@
-function Test-PwnedPassword {
+function Get-PwnedPassword {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory,Position=0,ValueFromPipeline)]
@@ -25,7 +25,7 @@ function Test-PwnedPassword {
         $PasswordHash = &$HashCmd $InputObject
 
         # Check the hash
-        Test-PwnedHash $PasswordHash -ApiRoot $ApiRoot @padding
+        Get-PwnedHash $PasswordHash -ApiRoot $ApiRoot @padding
     }
 
     <#
@@ -53,23 +53,23 @@ function Test-PwnedPassword {
 
     .EXAMPLE
         $secPass = Read-Host -Prompt 'Password' -AsSecureString
-        PS C:\>Test-PwnedPassword $secPass
+        PS C:\>Get-PwnedPassword $secPass
 
         Test a SecureString password against the official pwnedpasswords.com API.
 
     .EXAMPLE
-        'pass1','pass2','pass3' | Test-PwnedPassword
+        'pass1','pass2','pass3' | Get-PwnedPassword
 
         Test a set of passwords against the official pwnedpasswords.com API.
 
     .EXAMPLE
         $cred = Get-Credential
-        PS C:\>Test-PwnedPassword $cred -ApiRoot 'http://internal.example.com/range/' -HashType 'NTLM'
+        PS C:\>Get-PwnedPassword $cred -ApiRoot 'http://internal.example.com/range/' -HashType 'NTLM'
 
         Test a PSCredential's password against an internal NTLM Pwned Passwords API endpoint.
 
     .LINK
-        Test-PwnedHash
+        Get-PwnedHash
 
     .LINK
         https://haveibeenpwned.com/API/v3#PwnedPasswords

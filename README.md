@@ -39,45 +39,45 @@ iex (irm https://raw.githubusercontent.com/rmbolger/PwnedPassCheck/main/instdev.
 
 # Quick Start
 
-The easiest function to start with is `Test-PwnedPassword`. You can supply a plaintext password to it as either a String, SecureString, or PSCredential object.
+The easiest function to start with is `Get-PwnedPassword`. You can supply a plaintext password to it as either a String, SecureString, or PSCredential object.
 
 ```powershell
 # Using a regular string like this is super easy, but not recommended for
 # real passwords because it can be saved in your command history
-Test-PwnedPassword 'password'
+Get-PwnedPassword 'password'
 
 # Instead, use Read-Host to interactively collect the password as a SecureString
 $secPass = Read-Host -AsSecureString -Prompt 'Enter Password'
-Test-PwnedPassword $secPass
+Get-PwnedPassword $secPass
 
 # You can do the same thing with a PSCredential (Username is ignored)
 $credential = Get-Credential
-Test-PwnedPassword $credential
+Get-PwnedPassword $credential
 ```
 
 If you want to bulk test passwords, just pass them all in via the pipeline like this.
 
 ```powershell
-'password',$secPass,$credential | Test-PwnedPassword
+'password',$secPass,$credential | Get-PwnedPassword
 ```
 
-If you have existing hashes to check, you can use `Test-PwnedHash`. However, the official API only supports SHA1 hashes.
+If you have existing hashes to check, you can use `Get-PwnedHash`. However, the official API only supports SHA1 hashes.
 
 ```powershell
 $hash = '70CCD9007338D6D81DD3B6271621B9CF9A97EA00' # SHA1 hash of "Password1"
-Test-PwnedHash $hash
+Get-PwnedHash $hash
 ```
 
 Because the Pwned Password data is freely downloadable, it's possible to setup your own local copy of the API or use one hosted by a third party. Use the `ApiRoot` parameter to override the default API URL you test against.
 
 ```powershell
-Test-PwnedPassword 'password' -ApiRoot 'https://pwnpass.example.com/range/'
+Get-PwnedPassword 'password' -ApiRoot 'https://pwnpass.example.com/range/'
 ```
 
 In addition to the SHA1 hashed copy of the data, an NTLM hashed copy is available. This can be incredibly useful for auditing passwords in an Active Directory environment. If you are testing against an NTLM version of the API, use the `HashType` parameter to make sure the function calculates the correct hash value.
 
 ```powershell
-Test-PwnedPassword 'password' -HashType 'NTLM' -ApiRoot 'https://pwnntlm.example.com/range/'
+Get-PwnedPassword 'password' -HashType 'NTLM' -ApiRoot 'https://pwnntlm.example.com/range/'
 ```
 
 

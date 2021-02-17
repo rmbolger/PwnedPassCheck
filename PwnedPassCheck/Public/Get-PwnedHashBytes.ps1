@@ -1,4 +1,4 @@
-function Test-PwnedHashBytes {
+function Get-PwnedHashBytes {
     param(
         [Parameter(Mandatory,Position=0,ValueFromPipeline,ValueFromPipelineByPropertyName)]
         [Alias('NTHash')]
@@ -29,7 +29,7 @@ function Test-PwnedHashBytes {
         $PasswordHash = [BitConverter]::ToString($HashBytes).Replace('-','')
         Write-Verbose "Converted hash bytes to $PasswordHash"
 
-        Test-PwnedHash $PasswordHash -ApiRoot $ApiRoot -Label $Label @padding
+        Get-PwnedHash $PasswordHash -ApiRoot $ApiRoot -Label $Label @padding
     }
 
     <#
@@ -57,7 +57,7 @@ function Test-PwnedHashBytes {
 
     .EXAMPLE
         $hashBytes = Get-SHA1Hash 'password' -AsBytes
-        PS C:\>Test-PwnedHashBytes $hashBytes -Label 'myuser'
+        PS C:\>Get-PwnedHashBytes $hashBytes -Label 'myuser'
 
         Test a byte array hash against the official pwnedpasswords.com API
 
