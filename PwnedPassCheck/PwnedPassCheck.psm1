@@ -15,7 +15,7 @@ foreach ($import in @($Public + $Private))
 
 # Define common parameters for Invoke-WebRequest
 $script:IWR_PARAMS = @{
-    UserAgent = "PwnedPassCheck/1.2.0 PowerShell/$($PSVersionTable.PSVersion)"
+    UserAgent = "PwnedPassCheck/2.0.0 PowerShell/$($PSVersionTable.PSVersion)"
     ErrorAction = 'Stop'
 }
 
