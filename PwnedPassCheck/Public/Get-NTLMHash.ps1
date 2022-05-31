@@ -12,6 +12,9 @@ function Get-NTLMHash {
     #   https://github.com/LarrysGIT/MD4-powershell
     #   https://tools.ietf.org/html/rfc1320
     #
+    # "NT Hash" is basically an MD4 hash of the UTF16-LE encoded password bytes
+    # System.Text.Encoding.Unicode = UTF16-LE
+    #
     # Example:
     #   Get-NTLMHash 'hello'           # 066DDFD4EF0E9CD7C256FE77191EF43C
     #   'password' | Get-NTLMHash      # 8846F7EAEE8FB117AD06BDD830B7586C
@@ -49,7 +52,6 @@ function Get-NTLMHash {
             $BytesToHash = [Text.Encoding]::Unicode.GetBytes($InputObject)
         }
         elseif ($InputObject -is [securestring]) {
-            # TODO: Investigate if there are more secure ways to go directly from a SecureString to byte array
             $secPlain = (New-Object PSCredential "user",$InputObject).GetNetworkCredential().Password
             $BytesToHash = [Text.Encoding]::Unicode.GetBytes($secPlain)
         }
