@@ -1,7 +1,7 @@
 @{
 
 RootModule = 'PwnedPassCheck.psm1'
-ModuleVersion = '2.0.0'
+ModuleVersion = '3.0.0'
 GUID = 'f33d7d9c-2dc0-4bd4-a80a-557bc46bfe8c'
 Author = 'Ryan Bolger'
 Copyright = '(c) 2019 Ryan Bolger. All rights reserved.'
@@ -38,13 +38,13 @@ PrivateData = @{
 
         # ReleaseNotes of this module
         ReleaseNotes = @'
-## 2.0.0 (2020-02-17)
+## 3.0.0 (2023-02-14)
+
+* Slightly better error handling.
 
 ### Breaking Changes
 
-* To better adhere to PowerShell naming standards, `Test-PwnedPassword`, `Test-PwnedHash`, and `Test-PwnedHashBytes` have been renamed to `Get-PwnedPassword`, `Get-PwnedHash`, and `Get-PwnedHashBytes` respectively.
-* New versions of `Test-PwnedPassword`, `Test-PwnedHash`, and `Test-PwnedHashBytes` have been added that return a simple boolean value to indicate whether the password/hash was seen in a breach or not.
-* The Label property is no longer added to results unless it is requested.
+* Added support for the `mode=ntlm` querystring parameter which is automatically added to HTTP based queries that are using an NTLM hash. It you need to disable this functionality, use the `-NoModeQueryString` switch.
 '@
 
     } # End of PSData hashtable

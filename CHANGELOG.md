@@ -1,3 +1,11 @@
+## 3.0.0 (2023-02-14)
+
+* Slightly better error handling.
+
+### Breaking Changes
+
+* Added support for the `mode=ntlm` querystring parameter which is automatically added to HTTP based queries that are using an NTLM hash. It you need to disable this functionality, use the `-NoModeQueryString` switch.
+
 ## 2.0.0 (2020-02-17)
 
 ### Breaking Changes
