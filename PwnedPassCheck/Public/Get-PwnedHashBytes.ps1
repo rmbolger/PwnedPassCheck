@@ -18,6 +18,8 @@ function Get-PwnedHashBytes {
 
     Process
     {
+        trap { $PSCmdlet.ThrowTerminatingError($PSItem) }
+
         # validate the length of the byte array here since we can't do it in ValidateScript
         # due to this oddity:
         # https://github.com/PowerShell/PowerShell/issues/6185

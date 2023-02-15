@@ -16,9 +16,7 @@ function Get-PwnedHash {
     Begin {
         $headers = @{}
         if ($RequestPadding) {
-            $headers.Headers = @{
-                'Add-Padding' = 'true'
-            }
+            $headers.'Add-Padding' = 'true'
         }
     }
 
@@ -30,9 +28,18 @@ function Get-PwnedHash {
 
         if ($ApiRoot -like 'http*') {
             # query the appropriate web URL
+            $queryParams = @{
+                Uri = "$($ApiRoot)$($hashPrefix)"
+                Headers = $headers
+            }
+            # add NTLM mode if necessary
+            if ($PasswordHash.Length -eq 32) {
+                $queryParams.Uri += "?mode=ntlm"
+            }
             try {
-                $results = (Invoke-WebRequest "$($ApiRoot)$($hashPrefix)" @script:IWR_PARAMS @headers).Content
-            } catch { throw }
+                $results = (Invoke-WebRequest @queryParams @script:IWR_PARAMS).Content
+            } catch { $PSCmdlet.ThrowTerminatingError($PSItem) }
+
         } else {
             # must be filesystem path, so try to get contents
             $results = Get-Content "$($ApiRoot)$($hashPrefix)" -Raw -EA Stop
