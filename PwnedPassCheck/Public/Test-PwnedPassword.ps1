@@ -8,15 +8,23 @@ function Test-PwnedPassword {
         [string]$ApiRoot = "https://api.pwnedpasswords.com/range/",
         [ValidateSet('SHA1','NTLM')]
         [string]$HashType = 'SHA1',
-        [switch]$RequestPadding
+        [switch]$RequestPadding,
+        [switch]$NoModeQueryString
     )
 
     Begin
     {
         $HashCmd = "Get-$($HashType)Hash"
 
-        $padding = @{}
-        if ($RequestPadding) { $padding.RequestPadding = $true }
+        $checkParams = @{
+            ApiRoot = $ApiRoot
+        }
+        if ($RequestPadding) {
+            $checkParams.RequestPadding = $true
+        }
+        if ($NoModeQueryString) {
+            $checkParams.NoModeQueryString = $true
+        }
     }
 
     Process
@@ -25,7 +33,7 @@ function Test-PwnedPassword {
         $PasswordHash = &$HashCmd $InputObject
 
         # Check the hash
-        $result = Get-PwnedHash $PasswordHash -ApiRoot $ApiRoot @padding
+        $result = Get-PwnedHash $PasswordHash @checkParams
 
         if ($result.SeenCount -gt 0) {
             return $true
@@ -56,6 +64,9 @@ function Test-PwnedPassword {
 
     .PARAMETER RequestPadding
         If specified, HTTP based queries will add the 'Add-Padding: true' header to the request which signals to the server to return a randomly padded response. See https://www.troyhunt.com/enhancing-pwned-passwords-privacy-with-padding for details.
+
+    .PARAMETER NoModeQueryString
+        If specified, HTTP based queries will not automatically add the mode=ntlm querystring parameter when NTLM hashes are checked.
 
     .EXAMPLE
         $secPass = Read-Host -Prompt 'Password' -AsSecureString

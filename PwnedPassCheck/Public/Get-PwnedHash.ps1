@@ -10,7 +10,8 @@ function Get-PwnedHash {
         [string]$Label,
         [ValidateNotNullOrEmpty()]
         [string]$ApiRoot = "https://api.pwnedpasswords.com/range/",
-        [switch]$RequestPadding
+        [switch]$RequestPadding,
+        [switch]$NoModeQueryString
     )
 
     Begin {
@@ -33,7 +34,7 @@ function Get-PwnedHash {
                 Headers = $headers
             }
             # add NTLM mode if necessary
-            if ($PasswordHash.Length -eq 32) {
+            if (-not $NoModeQueryString -and $PasswordHash.Length -eq 32) {
                 $queryParams.Uri += "?mode=ntlm"
             }
             try {
@@ -87,6 +88,9 @@ function Get-PwnedHash {
 
     .PARAMETER RequestPadding
         If specified, HTTP based queries will add the 'Add-Padding: true' header to the request which signals to the server to return a randomly padded response. See https://www.troyhunt.com/enhancing-pwned-passwords-privacy-with-padding for details.
+
+    .PARAMETER NoModeQueryString
+        If specified, HTTP based queries will not automatically add the mode=ntlm querystring parameter when NTLM hashes are checked.
 
     .EXAMPLE
         $hash = '5BAA61E4C9B93F3F0682250B6CF8331B7EE68FD8' # UTF8 SHA1 hash of 'password'

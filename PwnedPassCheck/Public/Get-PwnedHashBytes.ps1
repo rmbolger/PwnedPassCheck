@@ -8,12 +8,20 @@ function Get-PwnedHashBytes {
         [string]$Label,
         [ValidateNotNullOrEmpty()]
         [string]$ApiRoot = "https://api.pwnedpasswords.com/range/",
-        [switch]$RequestPadding
+        [switch]$RequestPadding,
+        [switch]$NoModeQueryString
     )
 
     Begin {
-        $padding = @{}
-        if ($RequestPadding) { $padding.RequestPadding = $true }
+        $checkParams = @{
+            ApiRoot = $ApiRoot
+        }
+        if ($RequestPadding) {
+            $checkParams.RequestPadding = $true
+        }
+        if ($NoModeQueryString) {
+            $checkParams.NoModeQueryString = $true
+        }
     }
 
     Process
@@ -31,7 +39,7 @@ function Get-PwnedHashBytes {
         $PasswordHash = [BitConverter]::ToString($HashBytes).Replace('-','')
         Write-Verbose "Converted hash bytes to $PasswordHash"
 
-        Get-PwnedHash $PasswordHash -ApiRoot $ApiRoot -Label $Label @padding
+        Get-PwnedHash $PasswordHash -Label $Label @checkParams
     }
 
     <#
@@ -56,6 +64,9 @@ function Get-PwnedHashBytes {
 
     .PARAMETER RequestPadding
         If specified, HTTP based queries will add the 'Add-Padding: true' header to the request which signals to the server to return a randomly padded response. See https://www.troyhunt.com/enhancing-pwned-passwords-privacy-with-padding for details.
+
+    .PARAMETER NoModeQueryString
+        If specified, HTTP based queries will not automatically add the mode=ntlm querystring parameter when NTLM hashes are checked.
 
     .EXAMPLE
         $hashBytes = Get-SHA1Hash 'password' -AsBytes
